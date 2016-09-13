@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <script>
+    /*<![CDATA[*/ 
+        function send(){
+            // AJAX KODE HER
+            var fornavn = document.getElementsByTagName("input")[0].value;
+            var etternavn = document.getElementsByTagName("input")[1].value;
+
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    console.log();
+                }
+            }
+
+            xmlHttp.open("POST", "/save", true);
+            xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlHttp.send("fornavn="+fornavn+"&etternavn="+etternavn);
+        }
+
+        function refreshList(){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    console.log(xmlHttp.responseText);
+                    json = JSON.parse(xmlHttp.responseText);
+                    json.forEach(function(entry){
+                        console.log(entry);
+                        var ul = document.getElementById("personer");
+                        var li = document.createElement("li");
+                        li.innerHTML = entry.fornavn+" - "+entry.etternavn;
+                        ul.appendChild(li);
+                    });
+                }
+            }
+
+            xmlHttp.open("GET", "/list/json", true);
+            xmlHttp.send();
+        }
+    /*]]>*/
+    </script>
+</head>
+<body>
+  <h1>Fornavn</h1>
+  <input type="text" />
+  <h2>Etternavn</h2>
+  <input type="text"/>
+  <input type="submit" onClick="send()" />
+  <input type="submit" onClick="refreshList()" value="Oppdater" />
+
+  <ul id="personer"></ul>
+</body>
+</html>
